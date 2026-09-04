@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "vercel-server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "vercel-server.js"
+    }
+  ],
+  "env": {
+    "SHOPIFY_SHOP": "@shopify_shop",
+    "SHOPIFY_CLIENT_ID": "@shopify_client_id",
+    "SHOPIFY_CLIENT_SECRET": "@shopify_client_secret",
+    "APP_PIN": "@app_pin",
+    "CLAUDE_API_KEY": "@claude_api_key",
+    "METAFIELD_NAMESPACE": "custom"
+  }
+}
