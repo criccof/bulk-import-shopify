@@ -79,53 +79,51 @@ async function shopifyGraphQL(query, variables) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Claude API for AI
+// Google Gemini API for AI (Free!)
 // ─────────────────────────────────────────────────────────────
 
 async function generateDescription(productName, sku) {
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "x-api-key": process.env.CLAUDE_API_KEY,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 150,
-      messages: [{
-        role: "user",
-        content: `Genera una descrizione breve e accattivante (max 150 caratteri) per questo prodotto: "${productName}" (SKU: ${sku}). Solo la descrizione, niente altro.`
-      }]
-    })
-  });
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: `Genera una descrizione breve e accattivante (max 150 caratteri) per questo prodotto: "${productName}" (SKU: ${sku}). Solo la descrizione, niente altro.`
+          }]
+        }]
+      })
+    }
+  );
 
-  if (!res.ok) throw new Error("Claude API failed");
+  if (!res.ok) throw new Error("Gemini API failed");
   const data = await res.json();
-  return data.content[0]?.text || "Prodotto di qualità";
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  return text || "Prodotto di qualità";
 }
 
 async function suggestCollection(productName, description) {
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "x-api-key": process.env.CLAUDE_API_KEY,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 50,
-      messages: [{
-        role: "user",
-        content: `Suggerisci una collezione Shopify per questo prodotto: "${productName}" - ${description}. Solo il nome della collezione.`
-      }]
-    })
-  });
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: `Suggerisci una collezione Shopify per questo prodotto: "${productName}" - ${description}. Solo il nome della collezione, niente altro.`
+          }]
+        }]
+      })
+    }
+  );
 
-  if (!res.ok) throw new Error("Claude API failed");
+  if (!res.ok) throw new Error("Gemini API failed");
   const data = await res.json();
-  return data.content[0]?.text?.trim() || "Generale";
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  return text?.trim() || "Generale";
 }
 
 // ─────────────────────────────────────────────────────────────
