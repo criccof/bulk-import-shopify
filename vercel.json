@@ -17,7 +17,7 @@
     "SHOPIFY_CLIENT_ID": "@shopify_client_id",
     "SHOPIFY_CLIENT_SECRET": "@shopify_client_secret",
     "APP_PIN": "@app_pin",
-    "CLAUDE_API_KEY": "@claude_api_key",
+    "GEMINI_API_KEY": "@gemini_api_key",
     "METAFIELD_NAMESPACE": "custom"
   }
 }

@@ -335,9 +335,3 @@ app.post("/api/create-products", async (req, res) => {
 
 // Export default for Vercel
 module.exports = app;
-
-// Start server (per test locale)
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
